@@ -1,1 +1,95 @@
+using System;
+using System.Collections;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
 
+namespace HashTestStati
+{
+    public partial class Form1 : Form
+    {
+        static int i = 0;//定义一个静态变量i
+
+        public Form1()
+        {
+            InitializeComponent();
+        }
+
+        private void BXS_Click(object sender, EventArgs e)
+        {
+            string[] files = new string[3];//定义一个数组
+            files[0] = "　My father was a self-taught mandolin player. He was one of the best string instrument players in our town. He could not read music, but if he heard a tune a few times, he could play it. ";
+            files[1] = "When he was younger, he was a member of a small country music band. They would play at local dances and on a few occasions would play for the local radio station. He often told us how he had auditioned and earned a position in a band that featured Patsy Cline as their lead singer. ";
+            files[2] = "Occasionally, Dad would get out his mandolin and play for the family.";
+            i++;//i自加
+            BXS.Text = "文件显示" + i;//实现按钮的显示
+            TXS.Text = files[i - 1];//把文章显示在textbox中
+
+        }
+        //按下按钮显示统计数据
+        private void BTJ_Click(object sender, EventArgs e)
+        {
+            string strtext_low;
+            strtext_low = upperlower();
+            ArrayList strword = new ArrayList();
+            strword = separateword(strtext_low);
+            Hashtable hs = new Hashtable();
+            hs = hashcreate(strword);
+            TXS.Text = "";
+            foreach (DictionaryEntry de in hs)//输出
+            {
+                string str = string.Format("{0,-15} {1,3}", de.Key, de.Value);
+                TXS.Text = TXS.Text + str + "\r\n";
+            }
+        }
+        //往哈夫曼树中写入方法
+        private Hashtable hashcreate(ArrayList strword)
+        {
+
+            Hashtable ht = new Hashtable();
+            foreach (string i in strword)//遍历wtrword
+                if (!ht.Contains(i))
+                    ht.Add(i, 1);
+                else
+                {
+                    ht[i] = (int)ht[i] + 1;
+                }
+            return ht;
+        }
+
+
+        //定义一个转化方法
+        private ArrayList separateword(string strtext_low)
+        {
+
+            ArrayList sepword = new ArrayList();//定义一个动态数组用于传进已转换小写的数组
+            string strtext = strtext_low;
+            strtext = strtext.Replace(',', ' ');//用Replace（）方法将‘，’，‘。’转化为空格
+            strtext = strtext.Replace('.', ' ');
+            string[] word = new string[500];//定义一个500长度的数组接收转换完成的单词
+            word = strtext.Split(' ');//使用Split（）方法分割单词
+            foreach (string i in word)//遍历循环将其传入动态数组sepword
+                sepword.Add(i);
+            return sepword;
+        }
+
+
+
+
+
+        //定义一个转化小写方法
+        private string upperlower()
+        {
+
+            return TXS.Text.ToLower();//返回小写值
+        }
+
+
+
+
+    }
+}
